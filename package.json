@@ -1,0 +1,26 @@
+{
+  "name": "nany-backend-rest-api",
+  "version": "1.0.0",
+  "description": "REST-API Nany",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IS-912-Project-Nany/Nany-Backend-REST-API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IS-912-Project-Nany/Nany-Backend-REST-API/issues"
+  },
+  "homepage": "https://github.com/IS-912-Project-Nany/Nany-Backend-REST-API#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.5",
+    "nodemon": "^2.0.12"
+  }
+}
