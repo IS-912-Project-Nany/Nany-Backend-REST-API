@@ -205,7 +205,7 @@ router.post('/:idCategoria/empresas/:idEmpresa/productos', (req, res) => {
         })
 });
 
-//Obtener Productos por Categoria y mepresa
+//Obtener Productos por Categoria y Empresa
 router.get('/:idCategoria/empresas/:idEmpresa/productos', (req, res) => {
     categoria.find(
         {
@@ -213,7 +213,7 @@ router.get('/:idCategoria/empresas/:idEmpresa/productos', (req, res) => {
             "empresas._id": mongoose.Types.ObjectId(req.params.idEmpresa)
         },
         {
-            "empresas.$": true
+            "empresas.productos.$": true
         }
     )
         .then(result => {
@@ -226,6 +226,79 @@ router.get('/:idCategoria/empresas/:idEmpresa/productos', (req, res) => {
         })
 });
 
+//Obtener Producto por Empresa en una Categoria
+router.get('/:idCategoria/empresas/:idEmpresa/productos/:idProducto', (req, res) => {
+    categoria.find(
+        {
+            _id: mongoose.Types.ObjectId(req.params.idCategoria),
+            "empresas._id": mongoose.Types.ObjectId(req.params.idEmpresa),
+            "empresas.productos._id": mongoose.Types.ObjectId(req.params.idProducto)
+        },
+        {
+            "empresas.productos.$": true
+        }
+    )
+        .then(result => {
+           res.send(result);
+           res.end();
+        })
+        .catch(error => {
+            res.send(error);
+            res.end();
+        })
+});
 
+//Actualizar Productos de Empresa por Categoria
+router.put('/:idCategoria/empresas/:idEmpresa/productos/:idProducto', (req, res) => {
+    categoria.updateOne(
+        {
+            _id: mongoose.Types.ObjectId(req.params.idCategoria),
+            "empresas._id": mongoose.Types.ObjectId(req.params.idEmpresa),
+            "empresas.productos._id": mongoose.Types.ObjectId(req.params.idProducto)
+        },
+        {
+            $set: {
+                "empresas.productos.$": {
+                        nombre: req.body.nombre,
+                        descripcion: req.body.descripcion,
+                        isv: req.body.isv,
+                        precio: req.body.precio,
+                        existencia: req.body.existencia,
+                        imagen: req.body.imagen
+                }
+            }
+        }
+    )
+        .then(result => {
+            res.send(result);
+            res.end();
+        })
+        .catch(error => {
+            res.send(error);
+            res.end();
+        })
+});
+
+//Borrar Producto de Empresa y Categoria
+router.delete('/:idCategoria/empresas/:idEmpresa/productos/:idProducto', (req, res) => {
+    categoria.updateOne(
+        {
+            _id: mongoose.Types.ObjectId(req.params.idCategoria),
+            "empresas._id": mongoose.Types.ObjectId(req.params.idEmpresa),
+            "empresas.productos._id": mongoose.Types.ObjectId(req.params.idProducto)
+        },
+        {
+           
+        }
+    )
+        .then(result => {
+            res.send(result);
+            res.end();
+        })
+        .catch(error => {
+            res.send(error);
+            res.end();
+        })
+});
 
 module.exports = router;
