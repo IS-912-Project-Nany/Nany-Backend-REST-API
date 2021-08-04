@@ -1,17 +1,13 @@
 const mongoose = require('mongoose');
-
-const servidor = 'localhost:27017';
-const db = 'nany-DB';
+const uri = "mongodb+srv://nany_user:SQqO7ll5z86YJk7V@clusterdb.yousf.mongodb.net/nanyDB"
 
 class Database{
     constructor(){
-        //Promesas
-        mongoose.connect(`mongodb://${servidor}/${db}`)
+        mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: false})
         .then(()=>{
-            console.log('Se conecto a mongo');
-        }).catch((error)=>{
-            console.log(error);
-        });
+            console.log('Se conecto a la base en MongoDB atlas');
+        })
+        .catch(error=> console.log(error));
     }
 }
 
