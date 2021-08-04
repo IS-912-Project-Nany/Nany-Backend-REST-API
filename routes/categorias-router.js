@@ -239,8 +239,8 @@ router.get('/:idCategoria/empresas/:idEmpresa/productos/:idProducto', (req, res)
         }
     )
         .then(result => {
-           res.send(result);
-           res.end();
+            res.send(result);
+            res.end();
         })
         .catch(error => {
             res.send(error);
@@ -254,19 +254,26 @@ router.put('/:idCategoria/empresas/:idEmpresa/productos/:idProducto', (req, res)
         {
             _id: mongoose.Types.ObjectId(req.params.idCategoria),
             "empresas._id": mongoose.Types.ObjectId(req.params.idEmpresa),
-            "empresas.productos._id": mongoose.Types.ObjectId(req.params.idProducto)
         },
         {
             $set: {
-                "empresas.productos.$": {
-                        nombre: req.body.nombre,
-                        descripcion: req.body.descripcion,
-                        isv: req.body.isv,
-                        precio: req.body.precio,
-                        existencia: req.body.existencia,
-                        imagen: req.body.imagen
+                "empresas.$.productos.$[producto]":{
+                    _id: mongoose.Types.ObjectId(req.params.idProducto),
+                    nombre: req.body.nombre,
+                    descripcion: req.body.descripcion,
+                    isv: req.body.isv,
+                    precio: req.body.precio,
+                    existencia: req.body.existencia,
+                    imagen: req.body.imagen
                 }
             }
+        },
+        {
+            arrayFilters: [
+                {
+                    "producto._id" :  mongoose.Types.ObjectId(req.params.idProducto)
+                }
+            ]
         }
     )
         .then(result => {
@@ -284,21 +291,24 @@ router.delete('/:idCategoria/empresas/:idEmpresa/productos/:idProducto', (req, r
     categoria.updateOne(
         {
             _id: mongoose.Types.ObjectId(req.params.idCategoria),
-            "empresas._id": mongoose.Types.ObjectId(req.params.idEmpresa),
-            "empresas.productos._id": mongoose.Types.ObjectId(req.params.idProducto)
+            "empresas._id": mongoose.Types.ObjectId(req.params.idEmpresa)
         },
         {
-           
+            $pull: {
+                "empresas.$.productos": {
+                    _id: mongoose.Types.ObjectId(req.params.idProducto)
+                }
+            }
         }
     )
-        .then(result => {
-            res.send(result);
-            res.end();
-        })
-        .catch(error => {
-            res.send(error);
-            res.end();
-        })
+    .then(result => {
+        res.send(result);
+        res.end();
+    })
+    .catch(error => {
+        res.send(error);
+        res.end();
+    })
 });
 
 module.exports = router;
