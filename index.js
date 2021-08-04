@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const usuariosRouter = require('./routes/usuarios-router');
 const categoriasRouter = require('./routes/categorias-router');
 const facturasRouter = require('./routes/facturas-router');
+const ordenesRouter = require('./routes/ordenes-router');
 
 const db = require('./modules/database');
 
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/usuarios', usuariosRouter);
 app.use('/categorias', categoriasRouter);
 app.use('/facturas', facturasRouter);
+app.use('/ordenes', ordenesRouter);
 
 
 app.get('/', (req, res)=> {

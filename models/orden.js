@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
+    numOrden: String,
     cliente: Object,
     motorista: Object,
     ubicacionOrden: Object,
     tipoEstado: Object,
-    fecha: Date
+    detalleProductos: Array,
+    fecha: Date,
+    factura: Object
 });
 
 module.exports = mongoose.model('ordenes', schema);
