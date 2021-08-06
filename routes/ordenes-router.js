@@ -32,8 +32,27 @@ router.get('/:idOrden', (req, res)=>{
     })
 });
 
+//El motorista tiene una comision del 20% y el 80% al admin
 //Crear una orden
 router.post('/', (req, res)=>{
+    let factura = {
+        cantidadProductos:0,
+        costoEnvio: 50,
+        comisionMotorista: 0,
+        subtotal:0,
+        total:0
+    };
+    for (let i = 0; i < req.body.detalleProductos.length; i++) {
+        let detalle = req.body.detalleProductos[i];
+        let totalProducto = (detalle.producto.isv + detalle.producto.precio)*detalle.cantidad;
+        let cantidadAcumulada = detalle.cantidad; 
+        
+        factura.cantidadProductos += cantidadAcumulada;
+        factura.subtotal += totalProducto;
+    };
+    factura.total = (factura.costoEnvio + factura.subtotal);
+    factura.comisionMotorista = factura.total*0.20;
+
     let ord = new orden(
         {
             numOrden: req.body.numOrden,
@@ -42,7 +61,9 @@ router.post('/', (req, res)=>{
             ubicacionOrden: req.body.ubicacionOrden,
             tipoEstado: req.body.tipoEstado,
             detalleProductos: req.body.detalleProductos,
-            fecha: req.body.fecha
+            fecha: req.body.fecha,
+            factura: factura,
+            metodoPago: req.body.metodoPago
         }
     );
     ord.save()

@@ -8,7 +8,8 @@ const schema = new mongoose.Schema({
     tipoEstado: Object,
     detalleProductos: Array,
     fecha: Date,
-    factura: Object
+    factura: Object,
+    metodoPago: Object
 });
 
 module.exports = mongoose.model('ordenes', schema);
