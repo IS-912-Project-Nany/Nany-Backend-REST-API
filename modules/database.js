@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-const uri = "mongodb+srv://nany_user:SQqO7ll5z86YJk7V@clusterdb.yousf.mongodb.net/nanyDB"
+const dotenv = require("dotenv");
+dotenv.config();
+
+const uri = process.env.MONGO_ATLAS_URI;
 
 class Database{
     constructor(){
