@@ -80,10 +80,12 @@ router.get('/:idCategoria/empresas', (req, res) => {
     categoria.find(
         {
             _id: mongoose.Types.ObjectId(req.params.idCategoria)
+        },{
+            empresas: true
         }
     )
         .then(result => {
-            res.send(result);
+            res.send(result[0]);
             res.end();
         })
         .catch(error => {
