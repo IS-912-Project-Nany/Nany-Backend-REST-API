@@ -8,6 +8,7 @@ const schema = new mongoose.Schema({
     contraseña: String,
     fechaNacimiento: Date,
     genero: Boolean,
+    imagen: String,
     tipoUsuario: tipoUsuario,
     ciudad: Object
 });
