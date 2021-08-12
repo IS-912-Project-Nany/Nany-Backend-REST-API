@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
     nombre: String, 
     apellido: String,
     correo: String,
-    contraseña: String,
+    password: String,
     fechaNacimiento: Date,
     genero: Boolean,
     imagen: String,
