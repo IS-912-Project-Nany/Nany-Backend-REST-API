@@ -23,7 +23,7 @@ router.post("/", (req, res) => {
             nombre: req.body.nombre,
             apellido: req.body.apellido,
             correo: req.body.correo,
-            contraseña: req.body.contraseña,
+            password: req.body.password,
             fechaNacimiento: req.body.fechaNacimiento,
             genero: req.body.genero,
             imagen: req.body.imagen,
@@ -38,12 +38,12 @@ router.post("/", (req, res) => {
         .then((result) => {
             console.log(result);
             if(result == ''){
-                bcrypt.hash(req.body.contraseña, 10, (error, passwordEncrypted) => {
+                bcrypt.hash(req.body.password, 10, (error, passwordEncrypted) => {
                     if (error)
                         console.log("Error Hasheado", error)
                     else {
                         console.log("Hash ", passwordEncrypted);
-                        u.contraseña = passwordEncrypted;
+                        u.password = passwordEncrypted;
                             u.save().then((result) => {
                                 res.send({usuario: result, code: 200, ok: true});
                                 res.end();

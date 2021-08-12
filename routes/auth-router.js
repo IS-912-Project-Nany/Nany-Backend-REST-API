@@ -8,7 +8,7 @@ const usuario = require('../models/usuario');
 router.post('/', (req, res) => {
     let u = {
         correo: req.body.correo,
-        contraseña: req.body.contraseña,
+        password: req.body.password,
     }
 
     usuario.find(
@@ -18,23 +18,23 @@ router.post('/', (req, res) => {
         .then((result) => {
             console.log(result);
             if(result != ''){
-                 bcrypt.compare(req.body.contraseña, result[0].contraseña, (error, coinciden) => {
+                 bcrypt.compare(req.body.password, result[0].password, (error, coinciden) => {
                      if (error)
                          console.log("Error Comprobando...", error)
                      else {
                         if(coinciden) {
                             let resultAuth = result[0];
-                            resultAuth.contraseña = '';
+                            resultAuth.password = '';
                             res.send({ code: 1, message: "Usuario Autenticado con Éxito", usuario: resultAuth});
                             res.end();
                         } else {
-                            res.send({ code: 0, message: "Contraseña Incorrecta" });
+                            res.send({ code: 2, message: "Contraseña Incorrecta" });
                             res.end();
                         }
                     }
                 });
             } else {
-                res.send({code: 0, menssage: "Correo No Encontrado"});
+                res.send({code: 0, message: "Correo No Encontrado"});
                 res.end();
             };
         })
