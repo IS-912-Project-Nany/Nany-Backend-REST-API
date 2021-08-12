@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const orden = require('../models/orden');
+const usuario = require('../models/usuario');
 const router = express.Router();
 
 //Obtener todas las ordenes 
@@ -63,13 +64,29 @@ router.post('/', (req, res)=>{
             detalleProductos: req.body.detalleProductos,
             fecha: req.body.fecha,
             factura: factura,
-            metodoPago: req.body.metodoPago
+            metodoPago: req.body.metodoPago,
+            ordenes: req.body.ordenes
         }
     );
     ord.save()
         .then(result=>{
-            res.send(result);
-            res.end();
+            usuario.updateOne({
+                _id: mongoose.Types.ObjectId(req.body.cliente._id)
+            },
+            {
+                $push:{
+                    ordenes: result
+                }
+            }).then(result2=>{
+                res.send({
+                    orden: result,
+                    cliente: result2
+                });
+                res.end();
+            }).catch(error=>{
+                res.send(error);
+                res.end();
+            })
         })
         .catch(error=>{
             res.send(error);
@@ -90,8 +107,23 @@ router.put('/:idOrden', (req, res)=>{
         }
     )
     .then(result=>{
-        res.send(result);
-        res.end();
+        usuario.updateOne({
+            _id: mongoose.Types.ObjectId(req.body.motorista._id)
+        },
+        {
+            $push:{
+                ordenes: req.body
+            }
+        }).then(result2=>{
+            res.send({
+                orden: result,
+                Motorista: result2
+            });
+            res.end();
+        }).catch(error=>{ 
+            res.send(error);
+            res.end();
+        })
     }).catch(error=>{
         res.send(error);
         res.end();
