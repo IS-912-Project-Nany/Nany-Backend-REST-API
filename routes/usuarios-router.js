@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const usuario = require("../models/usuario");
 const router = express.Router();
+const bcrypt = require('bcrypt');
 
 //Obtener todos los usuarios
 router.get("/", (req, res) => {
@@ -14,6 +15,7 @@ router.get("/", (req, res) => {
     });
 });
 
+//REGISTROO
 //Crear un nuevo usuario
 router.post("/", (req, res) => {
     let u = new usuario(
@@ -24,11 +26,62 @@ router.post("/", (req, res) => {
             contraseña: req.body.contraseña,
             fechaNacimiento: req.body.fechaNacimiento,
             genero: req.body.genero,
+            imagen: req.body.imagen,
             tipoUsuario: req.body.tipoUsuario,
             ciudad: req.body.ciudad,
         }
     );
-    u.save().then((result) => {
+    usuario.find(
+        {
+            correo: req.body.correo
+        })
+        .then((result) => {
+            console.log(result);
+            if(result == ''){
+                bcrypt.hash(req.body.contraseña, 10, (error, passwordEncrypted) => {
+                    if (error)
+                        console.log("Error Hasheado", error)
+                    else {
+                        console.log("Hash ", passwordEncrypted);
+                        u.contraseña = passwordEncrypted;
+                            u.save().then((result) => {
+                                res.send({usuario: result, code: 200, ok: true});
+                                res.end();
+                            })
+                                .catch((error) => {
+                                res.send(error);
+                                res.end();
+                            });
+                        }
+                    });
+            } else {
+                res.send({code: 0, menssage: "Correo ya existente"});
+                res.end();
+            };
+        })
+        .catch((error) => {
+            res.send(error);
+            res.end();
+        });
+});
+// Actualizar Usuario
+router.put("/:idUsuario", (req, res) => {
+    usuario.updateOne(
+        {
+            _id: mongoose.Types.ObjectId(req.params.idUsuario)
+        },
+        {  
+            $set: {
+                nombre: req.body.nombre,
+                apellido: req.body.apellido,
+                correo: req.body.correo,
+                fechaNacimiento: req.body.fechaNacimiento,
+                genero: req.body.genero,
+                imagen: req.body.imagen,
+                ciudad: req.body.ciudad
+            }
+        }
+    ).then((result) => {
       res.send(result);
       res.end();
     })
