@@ -91,6 +91,23 @@ router.put("/:idUsuario", (req, res) => {
     });
 });
 
+//Obtener las ordenes de un usuario
+router.get('/:idUsuario/ordenes', (req, res)=>{
+    usuario.find({
+        _id: mongoose.Types.ObjectId(req.params.idUsuario)  
+    },
+    {
+        "ordenes": true
+    })
+    .then(result=>{
+        res.send(result[0]);
+        res.end();
+    }).catch(error=>{
+        res.send(error);
+        res.end();
+    });
+})
+
 //Obtener todos los motoristas
 router.get('/motoristas', (req, res)=>{
     usuario.find({
@@ -120,7 +137,7 @@ router.get('/motoristas/:idMotorista', (req, res)=>{
     });
 });
 
-//Actualizar motorista
+//Actualizar estado de motorista
 router.put('/motoristas/:idMotorista', (req, res)=>{
     usuario.updateOne(
         {
@@ -129,7 +146,7 @@ router.put('/motoristas/:idMotorista', (req, res)=>{
         },
         {
             $set: {
-                "tipoUsuario.motoristaInfo.0.estadoAdmision": req.body.estadoAdmision
+                "tipoUsuario.motoristaInfo.estadoAdmision": req.body.estadoAdmision
             }
         }
     )
