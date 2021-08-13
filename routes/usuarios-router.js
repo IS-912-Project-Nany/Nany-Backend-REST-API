@@ -15,7 +15,21 @@ router.get("/", (req, res) => {
     });
 });
 
-//REGISTROO
+//Obtener un usuario cliente 
+router.get("/:idUsuario", (req, res) => {
+    usuario.find({
+        _id: mongoose.Types.ObjectId(req.params.idUsuario)
+    }).then(result=>{
+        res.send(result[0]);
+        res.end();
+    }).catch(error=>{
+        res.send(error);
+        res.end();
+    });
+});
+
+
+//REGISTRO
 //Crear un nuevo usuario
 router.post("/", (req, res) => {
     let u = new usuario(
@@ -55,7 +69,7 @@ router.post("/", (req, res) => {
                         }
                     });
             } else {
-                res.send({code: 0, menssage: "Correo ya existente"});
+                res.send({code: 0, message: "Correo ya existente"});
                 res.end();
             };
         })
