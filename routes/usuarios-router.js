@@ -4,7 +4,22 @@ const usuario = require("../models/usuario");
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
-//Obtener todos los usuarios
+
+//Obtener todos los motoristas
+router.get('/motoristas', (req, res)=>{
+    usuario.find({
+        "tipoUsuario.idUsuario": 2  //El codigo motorista
+    })
+    .then(result=>{
+        res.send(result);
+        res.end();
+    }).catch(error=>{
+        res.send(error);
+        res.end();
+    });
+});
+
+//Obtener todos los usuarios 
 router.get("/", (req, res) => {
     usuario.find().then(result=>{
         res.send(result);
@@ -18,7 +33,8 @@ router.get("/", (req, res) => {
 //Obtener un usuario cliente 
 router.get("/:idUsuario", (req, res) => {
     usuario.find({
-        _id: mongoose.Types.ObjectId(req.params.idUsuario)
+        _id: mongoose.Types.ObjectId(req.params.idUsuario),
+        "tipoUsuario.idUsuario": 1
     }).then(result=>{
         result.password ="";
         res.send(result[0]);
@@ -123,19 +139,6 @@ router.get('/:idUsuario/ordenes', (req, res)=>{
     });
 })
 
-//Obtener todos los motoristas
-router.get('/motoristas', (req, res)=>{
-    usuario.find({
-        "tipoUsuario.idUsuario": 2  //El codigo motorista
-    })
-    .then(result=>{
-        res.send(result);
-        res.end();
-    }).catch(error=>{
-        res.send(error);
-        res.end();
-    });
-});
 
 //Obtener motorista
 router.get('/motoristas/:idMotorista', (req, res)=>{
