@@ -20,6 +20,7 @@ router.get("/:idUsuario", (req, res) => {
     usuario.find({
         _id: mongoose.Types.ObjectId(req.params.idUsuario)
     }).then(result=>{
+        result.password ="";
         res.send(result[0]);
         res.end();
     }).catch(error=>{

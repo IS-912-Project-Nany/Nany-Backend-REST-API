@@ -81,7 +81,8 @@ router.get('/:idCategoria/empresas', (req, res) => {
         {
             _id: mongoose.Types.ObjectId(req.params.idCategoria)
         },{
-            empresas: true
+            empresas: true,
+            nombre: true
         }
     )
         .then(result => {
