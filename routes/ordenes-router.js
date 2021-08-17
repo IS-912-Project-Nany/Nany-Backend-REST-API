@@ -24,7 +24,7 @@ router.get('/:idOrden', (req, res)=>{
             _id: mongoose.Types.ObjectId(req.params.idOrden)
         }
     ).then(result=>{
-        res.send(result);
+        res.send(result[0]);
         res.end();
     })
     .catch(error=>{
