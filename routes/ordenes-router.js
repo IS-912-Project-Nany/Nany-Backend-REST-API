@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const orden = require('../models/orden');
 const usuario = require('../models/usuario');
+const redondearDecimales = require('../modules/castearNumero');
 const router = express.Router();
 
 //Obtener todas las ordenes 
@@ -45,14 +46,14 @@ router.post('/', (req, res)=>{
     };
     for (let i = 0; i < req.body.detalleProductos.length; i++) {
         let detalle = req.body.detalleProductos[i];
-        let totalProducto = (detalle.producto.isv + detalle.producto.precio)*detalle.cantidad;
+        let totalProducto = redondearDecimales(((detalle.producto.isv + detalle.producto.precio)* detalle.cantidad),2);
         let cantidadAcumulada = detalle.cantidad; 
         
         factura.cantidadProductos += cantidadAcumulada;
-        factura.subtotal += totalProducto;
+        factura.subtotal += redondearDecimales((totalProducto),2);
     };
-    factura.total = (factura.costoEnvio + factura.subtotal);
-    factura.comisionMotorista = factura.total*0.20;
+    factura.total = redondearDecimales(((factura.costoEnvio + factura.subtotal)),2);
+    factura.comisionMotorista = redondearDecimales((factura.total*0.20),2);
 
     let ord = new orden(
         {
@@ -147,4 +148,6 @@ router.delete('/:idOrden', (req, res)=>{
     });
 })
 
+
 module.exports = router;
+
