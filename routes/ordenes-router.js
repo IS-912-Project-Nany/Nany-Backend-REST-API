@@ -102,7 +102,8 @@ router.put('/:idOrden', (req, res)=>{
         },
         {
             $set: {
-                motorista: req.body.motorista
+                motorista: req.body.motorista,
+                tipoEstado: req.body.tipoEstado
             },
         }
     )
