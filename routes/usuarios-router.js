@@ -139,6 +139,26 @@ router.get('/:idUsuario/ordenes', (req, res)=>{
     });
 })
 
+//Actualizar el estado de la orden de un usuario
+router.put('/:idUsuario/ordenes/:idOrden', (req, res)=>{
+    usuario.updateOne(
+        {
+            _id: mongoose.Types.ObjectId(req.params.idUsuario),
+            "ordenes._id": req.params.idOrden
+        },
+        {
+            $set: {
+                "ordenes.$.tipoEstado": req.body.tipoEstado
+            }
+        }
+    ).then(result=>{
+        res.send(result);
+        res.end();
+    }).catch(error=>{
+        res.send(error);
+        res.end();
+    })
+})
 
 //Obtener motorista
 router.get('/motoristas/:idMotorista', (req, res)=>{
