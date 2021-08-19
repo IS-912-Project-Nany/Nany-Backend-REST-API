@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const usuario = require("../models/usuario");
+const orden = require("../models/orden");
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
@@ -151,9 +152,26 @@ router.put('/:idUsuario/ordenes/:idOrden', (req, res)=>{
                 "ordenes.$.tipoEstado": req.body.tipoEstado
             }
         }
-    ).then(result=>{
-        res.send(result);
-        res.end();
+    ).then(result1=>{
+        orden.updateOne(
+            {
+                _id: mongoose.Types.ObjectId(req.params.idOrden),
+            },
+            {
+                $set: {
+                    tipoEstado: req.body.tipoEstado
+                },
+            }
+        ).then(result2=>{
+            res.send({
+                usuario: result1,
+                orden: result2
+            });
+            res.end();
+        }).catch(error=>{
+            res.send(error);
+            res.end();
+        });
     }).catch(error=>{
         res.send(error);
         res.end();
