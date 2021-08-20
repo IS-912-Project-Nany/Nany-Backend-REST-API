@@ -126,10 +126,7 @@ router.put('/:idOrden', (req, res)=>{
             },
             {
                 $set: {
-                    'ordenes.$': {
-                        motorista: req.body.motorista.nombre + ' ' + req.body.motorista.apellido,
-                        tipoEstado: req.body.tipoEstado
-                    }
+                    'ordenes.$': req.body
                 }
             }).then(result3=>{
                 res.send({
