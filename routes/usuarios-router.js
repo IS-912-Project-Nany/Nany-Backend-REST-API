@@ -140,8 +140,9 @@ router.get('/:idUsuario/ordenes', (req, res)=>{
     });
 })
 
-//Actualizar el estado de la orden de un usuario
+//Actualizar el estado de la orden de un usuario y motorista
 router.put('/:idUsuario/ordenes/:idOrden', (req, res)=>{
+    //Actualizar Estado de orden en cliente
     usuario.updateOne(
         {
             _id: mongoose.Types.ObjectId(req.params.idUsuario),
@@ -153,21 +154,39 @@ router.put('/:idUsuario/ordenes/:idOrden', (req, res)=>{
             }
         }
     ).then(result1=>{
-        orden.updateOne(
+        //Actualizar Estado de orden en motorista
+        usuario.updateOne(
             {
-                _id: mongoose.Types.ObjectId(req.params.idOrden),
+                _id: mongoose.Types.ObjectId(req.body.motorista._id),
+                "ordenes._id": req.params.idOrden
             },
             {
                 $set: {
-                    tipoEstado: req.body.tipoEstado
+                    "ordenes.$.tipoEstado": req.body.tipoEstado
+                }
+            })
+            .then(result2 => {
+            //Actualizar Estado de orden
+            orden.updateOne(
+                {
+                    _id: mongoose.Types.ObjectId(req.params.idOrden),
                 },
-            }
-        ).then(result2=>{
-            res.send({
-                usuario: result1,
-                orden: result2
+                {
+                    $set: {
+                        tipoEstado: req.body.tipoEstado
+                    },
+                })
+            .then(result3=>{
+                res.send({
+                    usuario: result1,
+                    motorista: result2,
+                    orden: result3
+                });
+                res.end();
+            }).catch(error=>{
+                res.send(error);
+                res.end();
             });
-            res.end();
         }).catch(error=>{
             res.send(error);
             res.end();
