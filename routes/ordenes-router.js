@@ -97,6 +97,7 @@ router.post('/', (req, res)=>{
 
 //Actualizar una orden 
 router.put('/:idOrden', (req, res)=>{
+    // Actualizar Estado orden
     orden.updateOne(
         {
             _id: mongoose.Types.ObjectId(req.params.idOrden),
@@ -109,6 +110,7 @@ router.put('/:idOrden', (req, res)=>{
         }
     )
     .then(result=>{
+        // Actualziar Orden en Motorista
         usuario.updateOne({
             _id: mongoose.Types.ObjectId(req.body.motorista._id)
         },
@@ -117,11 +119,29 @@ router.put('/:idOrden', (req, res)=>{
                 ordenes: req.body
             }
         }).then(result2=>{
-            res.send({
-                orden: result,
-                Motorista: result2
-            });
-            res.end();
+            // Actualizar orden del cliente
+            usuario.updateOne({
+                _id: mongoose.Types.ObjectId(req.body.cliente._id),
+                'ordenes._id':  mongoose.Types.ObjectId(req.params.idOrden)
+            },
+            {
+                $set: {
+                    'ordenes.$': {
+                        motorista: req.body.motorista.nombre + ' ' + req.body.motorista.apellido,
+                        tipoEstado: req.body.tipoEstado
+                    }
+                }
+            }).then(result3=>{
+                res.send({
+                    orden: result,
+                    Motorista: result2,
+                    cliente: result3
+                });
+                res.end();
+            }).catch(error=>{ 
+                res.send(error);
+                res.end();
+            })
         }).catch(error=>{ 
             res.send(error);
             res.end();
